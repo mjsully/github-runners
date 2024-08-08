@@ -6,9 +6,12 @@ ARG RUNNER_NAME
 ARG GITHUB_URL
 ARG GITHUB_TOKEN
 
-RUN apt update -y
-RUN apt install -y curl
-RUN useradd -ms /bin/bash runner
+RUN apt update -y && apt install -y apt-transport-https ca-certificates curl gnupg2 lsb-release \
+    && curl -fsSL https://download.docker.com/linux/$(lsb_release -is | tr '[:upper:]' '[:lower:]')/gpg | apt-key add - 2>/dev/null \
+    && echo "deb [arch=amd64] https://download.docker.com/linux/$(lsb_release -is | tr '[:upper:]' '[:lower:]') $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list \
+    && apt update \
+    && apt install -y curl docker-ce-cli
+RUN useradd -ms /bin/bash runner && groupadd docker && usermod -aG docker runner
 WORKDIR /home/runner/
 RUN mkdir actions-runner 
 WORKDIR /home/runner/actions-runner

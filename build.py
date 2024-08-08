@@ -21,7 +21,7 @@ def run_image(container_name: str):
         os.system(f"docker container stop {container_name}")
     except Exception as e:
         print(e)
-    command = f"docker run -d --name {container_name} --rm {container_name}:latest" 
+    command = f"docker run -d --name {container_name} --rm -v /var/run/docker.sock:/var/run/docker.sock {container_name}:latest" 
     print(f"RUN COMMAND: {command}")
     os.system(command)
 
